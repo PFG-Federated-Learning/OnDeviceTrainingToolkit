@@ -1,5 +1,5 @@
 import logging
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 import hydra
 from server import create_server_app
 from client import create_client_app
@@ -12,16 +12,18 @@ log = logging.getLogger(__name__)
 
 @hydra.main(config_path=".", config_name="config")
 def my_app(cfg: DictConfig) -> None:
-    backend_config = {"client_resources": None}
-    if DEVICE.type == "cuda":
-        backend_config = {"client_resources": {"num_gpus": 1}}
+    cfg = OmegaConf.to_container(cfg)
+    backend_config = cfg.get("backend_config")
 
-    NUM_PARTITIONS = 10
+    if DEVICE.type == "cuda":
+        backend_config = cfg.get("gpu_backend_config")
+
+    NUM_PARTITIONS = cfg.get("partitions")
 
     # Run simulation
     run_simulation(
         server_app=create_server_app(),
-        client_app=create_client_app(),
+        client_app=create_client_app(cfg.get("clients")),
         num_supernodes=NUM_PARTITIONS,
         backend_config=backend_config,
     )

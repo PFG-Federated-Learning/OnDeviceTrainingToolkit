@@ -4,8 +4,8 @@ from flwr.common import Context
 from dataset import load_datasets
 import torch
 import hydra
+from random import randint
 
-@hydra.main(config_path=".", config_name="config")
 class FlowerNumPyClient(NumPyClient):
     def __init__(self, partition_id, net, trainloader, valloader, time_to_process):
         self.partition_id = partition_id
@@ -40,14 +40,15 @@ class FlowerNumPyClient(NumPyClient):
 
 
 
-def numpyclient_fn(context: Context) -> Client:
+def numpyclient_fn(context: Context, clients: list) -> Client:
     device = torch.device("cpu") 
     net = Net().to(device)
     partition_id = context.node_config["partition-id"]
     num_partitions = context.node_config["num-partitions"]
     trainloader, valloader, _ = load_datasets(partition_id, num_partitions)
-    return FlowerNumPyClient(partition_id, net, trainloader, valloader, 30).to_client()
+    client = clients[randint(0,2)]
+    return FlowerNumPyClient(partition_id, net, trainloader, valloader, client["cpu_time"]).to_client()
 
-def create_client_app():
+def create_client_app(clients):
 # Create the ClientApp
-    return ClientApp(client_fn=numpyclient_fn)
+    return ClientApp(client_fn=lambda context: numpyclient_fn(context, clients))
