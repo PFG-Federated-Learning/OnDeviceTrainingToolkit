@@ -1,8 +1,8 @@
 import logging
 from omegaconf import DictConfig, OmegaConf
 import hydra
-from server import create_server_app
-from client import create_client_app
+from test_transformers.client_app import create_client_app
+from test_transformers.server_app import create_server_app
 import torch
 from flwr.simulation import run_simulation
 
@@ -22,8 +22,8 @@ def my_app(cfg: DictConfig) -> None:
 
     # Run simulation
     run_simulation(
-        server_app=create_server_app(),
-        client_app=create_client_app(cfg.get("clients")),
+        server_app=create_server_app(cfg),
+        client_app=create_client_app(cfg),
         num_supernodes=NUM_PARTITIONS,
         backend_config=backend_config,
     )
