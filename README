@@ -39,5 +39,4 @@ It is also define the number of partitions to ddivide the dataset.
 
 ```shell
 python src/simulation.py
-
 ```
