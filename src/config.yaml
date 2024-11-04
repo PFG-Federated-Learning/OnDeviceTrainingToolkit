@@ -10,8 +10,9 @@ gpu_backend_config:
     num_gpus: 1
 
 clients:
-  - cpu_time: 30
-  - cpu_time: 20
-  - cpu_time: 10
+  - energy: 50
+    epochs: 2
+  - energy: 114
+    epochs: 2
 
 partitions: 10

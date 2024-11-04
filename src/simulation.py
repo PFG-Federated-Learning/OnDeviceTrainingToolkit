@@ -1,8 +1,8 @@
 import logging
 from omegaconf import DictConfig, OmegaConf
 import hydra
-from test_transformers.client_app import create_client_app
-from test_transformers.server_app import create_server_app
+from src.client_app import create_client_app
+from src.server_app import create_server_app
 import torch
 from flwr.simulation import run_simulation
 

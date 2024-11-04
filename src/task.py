@@ -12,6 +12,11 @@ from flwr_datasets.partitioner import IidPartitioner
 from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, DataCollatorWithPadding
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader, random_split
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
 
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -20,6 +25,15 @@ transformers.logging.set_verbosity_error()
 
 
 fds = None  # Cache FederatedDataset
+
+# Load and preprocess the dataset
+def load_mnist():
+    transform = transforms.Compose([transforms.ToTensor()])
+    dataset = datasets.MNIST("./data", train=True, download=True, transform=transform)
+    train_set, test_set = random_split(dataset, [55000, 5000])
+    train_loader = DataLoader(train_set, batch_size=32, shuffle=True)
+    test_loader = DataLoader(test_set, batch_size=32)
+    return train_loader, test_loader
 
  
 def load_data(partition_id: int, num_partitions: int, model_name: str, dataset: str):
@@ -61,34 +75,31 @@ def load_data(partition_id: int, num_partitions: int, model_name: str, dataset: 
     return trainloader, testloader
 
 
-def train(net, trainloader, epochs, device):
-    optimizer = AdamW(net.parameters(), lr=5e-5)
-    net.train()
-    for _ in range(epochs):
-        for batch in trainloader:
-            batch = {k: v.to(device) for k, v in batch.items()}
-            outputs = net(**batch)
-            loss = outputs.loss
+def train(model, train_loader):
+    model.train()
+    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    for epoch in range(1):  # Single epoch for demonstration
+        for data, target in train_loader:
+            optimizer.zero_grad()
+            output = model(data)
+            loss = F.nll_loss(output, target)
             loss.backward()
             optimizer.step()
-            optimizer.zero_grad()
 
+def test(model, test_loader):
+    model.eval()
+    test_loss = 0
+    correct = 0
+    with torch.no_grad():
+        for data, target in test_loader:
+            output = model(data)
+            test_loss += F.nll_loss(output, target, reduction="sum").item()
+            pred = output.argmax(dim=1, keepdim=True)
+            correct += pred.eq(target.view_as(pred)).sum().item()
+    test_loss /= len(test_loader.dataset)
+    accuracy = correct / len(test_loader.dataset)
+    return test_loss, accuracy
 
-def test(net, testloader, device):
-    metric = load_metric("accuracy")
-    loss = 0
-    net.eval()
-    for batch in testloader:
-        batch = {k: v.to(device) for k, v in batch.items()}
-        with torch.no_grad():
-            outputs = net(**batch)
-        logits = outputs.logits
-        loss += outputs.loss.item()
-        predictions = torch.argmax(logits, dim=-1)
-        metric.add_batch(predictions=predictions, references=batch["labels"])
-    loss /= len(testloader.dataset)
-    accuracy = metric.compute()["accuracy"]
-    return loss, accuracy
 
 
 def get_weights(net):
@@ -99,3 +110,23 @@ def set_weights(net, parameters):
     params_dict = zip(net.state_dict().keys(), parameters)
     state_dict = OrderedDict({k: torch.tensor(v) for k, v in params_dict})
     net.load_state_dict(state_dict, strict=True)
+
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(1, 32, 3, 1)
+        self.conv2 = nn.Conv2d(32, 64, 3, 1)
+        self.fc1 = nn.Linear(9216, 128)
+        self.fc2 = nn.Linear(128, 10)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = F.relu(x)
+        x = self.conv2(x)
+        x = F.relu(x)
+        x = F.max_pool2d(x, 2)
+        x = torch.flatten(x, 1)
+        x = self.fc1(x)
+        x = F.relu(x)
+        x = self.fc2(x)
+        return F.log_softmax(x, dim=1)

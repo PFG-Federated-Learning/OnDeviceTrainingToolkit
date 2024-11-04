@@ -1,57 +1,49 @@
 """test-transformers: A Flower / HuggingFace app."""
 
-import torch
-from flwr.client import ClientApp, NumPyClient
-from flwr.common import Context
-from transformers import AutoModelForSequenceClassification
-
-from test_transformers.task import get_weights, load_data, set_weights, test, train
 from random import randint
+from flwr.client import ClientApp
 
-# Flower client
-class FlowerClient(NumPyClient):
-    def __init__(self, net, partition_id, trainloader, testloader, local_epochs, client_metrics):
-        self.net = net
-        self.trainloader = trainloader
-        self.testloader = testloader
-        self.local_epochs = local_epochs
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        self.net.to(self.device)
-        self.partition_id = partition_id
-        self.client_metrics = client_metrics
+import tensorflow as tf
+import flwr as fl
+
+from src.task_test import get_ds, get_model, get_processed_ds
+
+# Define a Flower client for each simulated client
+class MnistClient(fl.client.NumPyClient):
+    def __init__(self, model, train_ds, client_metrics):
+        self.model = model
+        self.train_ds = train_ds
+        self.epochs = client_metrics["epochs"]
+        self.energy = client_metrics["energy"]
+
+    def get_parameters(self, config):
+        return self.model.get_weights()
 
     def fit(self, parameters, config):
-        print(f"client {self.partition_id}: start training with client_metrics {self.client_metrics}")
-        set_weights(self.net, parameters)
-        train(self.net, self.trainloader, epochs=self.local_epochs, device=self.device)
-        return get_weights(self.net), len(self.trainloader), self.client_metrics
+        self.model.set_weights(parameters)
+        self.model.fit(self.train_ds, epochs=self.epochs, verbose=0)
+        return self.model.get_weights(), len(self.train_ds), {"energy": self.energy}
 
     def evaluate(self, parameters, config):
-        set_weights(self.net, parameters)
-        loss, accuracy = test(self.net, self.testloader, self.device)
-        return float(loss), len(self.testloader), {"accuracy": accuracy}
+        self.model.set_weights(parameters)
+        loss, accuracy = self.model.evaluate(self.train_ds, verbose=0)
+        return loss, len(self.train_ds), {"accuracy": accuracy}
 
+# Flower client function
+def client_fn(context, config):
+    # Load and preprocess the dataset for each client
+    train_ds, _, ds_info = get_ds()
+    train_ds = get_processed_ds(train_ds, ds_info)
 
-def client_fn(context: Context, config: dict):
-
-    # Get this client's dataset partition
-    partition_id = context.node_config["partition-id"]
-    num_partitions = context.node_config["num-partitions"]
-    model_name = config["model"]
-    dataset = config["dataset"]
-    trainloader, valloader = load_data(partition_id, num_partitions, model_name, dataset)
-
-    # Load model
-    num_labels = 2
-    net = AutoModelForSequenceClassification.from_pretrained(
-        model_name, num_labels=num_labels
+    # Instantiate and return the client
+    model = get_model()
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(0.001),
+        loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
+        metrics=["accuracy"],
     )
-
-    local_epochs = 1
     clients = config["clients"]
     client_metrics = clients[randint(0,len(clients)-1)]
-    # Return Client instance
-    return FlowerClient(net, partition_id,trainloader, valloader, local_epochs, client_metrics).to_client()
-
+    return MnistClient(model, train_ds, client_metrics).to_client()
 def create_client_app(config):
     return ClientApp(client_fn=lambda context: client_fn(context, config))
