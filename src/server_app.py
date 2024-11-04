@@ -6,7 +6,7 @@ from flwr.server.strategy import FedAvg
 import tensorflow as tf
 from typing import Dict
 
-from src.task_test import get_model
+from src.task import get_model
 
 # Define the custom strategy with cumulative metrics tracking
 class CustomStrategy(FedAvg):

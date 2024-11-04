@@ -6,7 +6,7 @@ from flwr.client import ClientApp
 import tensorflow as tf
 import flwr as fl
 
-from src.task_test import get_ds, get_model, get_processed_ds
+from src.task import get_ds, get_model, get_processed_ds
 
 # Define a Flower client for each simulated client
 class MnistClient(fl.client.NumPyClient):
