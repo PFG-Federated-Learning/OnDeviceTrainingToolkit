@@ -95,5 +95,13 @@ def main():
     print("\nKERAS OUTPUT:\n", model.infer(sample_batch)['logits'][0])
     print("TFLITE OUTPUT:\n", infer(x=np.array(sample_batch).astype(np.float32))['logits'][0])
 
+    if RUN_TFLITE_TRAINING:
+        # Testing train function from TFLite converted model
+        train = interpreter.get_signature_runner("train")
+        curr_loss = float("inf")
+        for x, y in (pbar := tqdm(ds_train, desc=f"Training (TFLite): loss = {curr_loss}")):
+            curr_loss = train(x=x, y=y)['loss']
+            pbar.set_description(f"Training (TFLite): loss = {curr_loss}")
+
 if __name__ == "__main__":
     main()
