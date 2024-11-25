@@ -9,17 +9,17 @@ from constants import *
 # In the following code, as example, we load and pre-process 
 # the MNIST dataset
 
-def get_processed_ds():
+def get_ds():
+    (ds_train, ds_test), ds_info = tfds.load(
+            'mnist',
+            split=['train', 'test'],
+            shuffle_files=True,
+            as_supervised=True,
+            with_info=True,
+        )
+    return ds_train, ds_test, ds_info
 
-    def get_ds():
-        (ds_train, ds_test), ds_info = tfds.load(
-                'mnist',
-                split=['train', 'test'],
-                shuffle_files=True,
-                as_supervised=True,
-                with_info=True,
-            )
-        return ds_train, ds_test, ds_info
+def get_processed_ds():
 
     def normalize_img(image, label):
         """Normalizes images: `uint8` -> `float32`."""

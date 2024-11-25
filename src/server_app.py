@@ -6,17 +6,19 @@ from flwr.server.strategy import FedAvg
 import tensorflow as tf
 from typing import Dict
 
-from src.task import get_model
+from model_generation.example_cifar10.model_definition import _get_model as get_model
 
 # Define the custom strategy with cumulative metrics tracking
 class CustomStrategy(FedAvg):
-    def __init__(self, fraction_fit=1.0, fraction_evaluate=1.0, initial_parameters=None):
+    def __init__(self, fraction_fit=1.0, fraction_evaluate=1.0, initial_parameters=None, min_clients=1):
         super().__init__(
             fraction_fit=fraction_fit,
             fraction_evaluate=fraction_evaluate,
             initial_parameters=initial_parameters,
+            min_fit_clients=min_clients
         )
         self.energy_sum = 0
+        self.time_sum = 0
 
     def aggregate_fit(self, rnd, results, failures):
         aggregated_weights, _ = super().aggregate_fit(rnd, results, failures)
@@ -26,7 +28,9 @@ class CustomStrategy(FedAvg):
             for metric_name, metric_value in client_result.metrics.items():
                 if metric_name == "energy":
                     self.energy_sum+=metric_value
-        print(f"After round {rnd}, energy: {self.energy_sum}")
+                if metric_name == "time":
+                    self.time_sum+=metric_value
+        print(f"After round {rnd}, energy: {self.energy_sum}, time: {self.time_sum}")
         
         return aggregated_weights, {"energy sum": self.energy_sum}
 
@@ -56,6 +60,7 @@ def server_fn(context: Context, config: Dict):
         fraction_fit=fraction_fit,
         fraction_evaluate=fraction_fit,
         initial_parameters=initial_parameters,
+        min_clients=config.get("min_client_per_round", 1)
     )
     config = ServerConfig(num_rounds=num_rounds)
 

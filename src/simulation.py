@@ -1,8 +1,9 @@
+import json
 import logging
 from omegaconf import DictConfig, OmegaConf
 import hydra
-from src.client_app import create_client_app
-from src.server_app import create_server_app
+from client_app import create_client_app
+from server_app import create_server_app
 import torch
 from flwr.simulation import run_simulation
 
@@ -14,6 +15,10 @@ log = logging.getLogger(__name__)
 def my_app(cfg: DictConfig) -> None:
     cfg = OmegaConf.to_container(cfg)
     backend_config = cfg.get("backend_config")
+
+    with open('/home/tobias/flower-simulation/deviceConfigurations.json', 'r') as json_file:
+        devices_config = json.load(json_file)
+    cfg["devices_config"] = devices_config
 
     if DEVICE.type == "cuda":
         backend_config = cfg.get("gpu_backend_config")

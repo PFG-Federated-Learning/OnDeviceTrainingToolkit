@@ -3,7 +3,7 @@ from tensorflow.keras.layers import Input, Conv2D, Dense, Flatten, Dropout
 from tensorflow.keras.layers import GlobalMaxPooling2D, MaxPooling2D
 from tensorflow.keras.layers import BatchNormalization
 from tensorflow.keras.models import Model
-from constants import *
+from model_generation.example_cifar10.constants import *
 
 def _get_model():
     '''Define your model's backbone in this function'''
