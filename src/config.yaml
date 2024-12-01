@@ -1,7 +1,3 @@
-model: prajjwal1/bert-tiny
-
-dataset: stanfordnlp/imdb
-
 backend_config:
   client_resources:
     num_cpus: 8
