@@ -9,13 +9,14 @@ import pandas as pd
 with open('src/config.yaml', 'r') as yaml_file:
     config = safe_load(yaml_file)
 model_link_to_filter = config.get('model_use', None)
+firebase_database_url = config.get('firebase_database_url', None)
 
 if model_link_to_filter is None:
     raise ValueError("The 'model_link' field is missing in config.yaml.")
 
 cred = credentials.Certificate('secrets/service-account.json')
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://ondevicetraining-dc6d0-default-rtdb.firebaseio.com/'
+    'databaseURL': firebase_database_url
 })
 
 ref = db.reference('/')
