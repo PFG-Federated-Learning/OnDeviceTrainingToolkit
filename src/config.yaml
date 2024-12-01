@@ -1,4 +1,6 @@
+firebase_database_url: https://ondevicetraining-dc6d0-default-rtdb.firebaseio.com/
 model_use: https://drive.usercontent.google.com/u/2/uc?id=1BXJbfCki80avFWT0WP693zJBB1fM2utB&export=download
+
 partitions: 300
 min_client_per_round: 2
 
