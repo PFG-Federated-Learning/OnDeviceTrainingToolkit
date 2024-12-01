@@ -1,12 +1,10 @@
+model_use: https://drive.usercontent.google.com/u/2/uc?id=1BXJbfCki80avFWT0WP693zJBB1fM2utB&export=download
+partitions: 300
+min_client_per_round: 2
+
 backend_config:
   client_resources:
     num_cpus: 8
 gpu_backend_config:
   client_resources: 
     num_gpus: 1
-
-
-model_use: https://drive.usercontent.google.com/u/2/uc?id=1BXJbfCki80avFWT0WP693zJBB1fM2utB&export=download
-
-partitions: 300
-min_client_per_round: 2
