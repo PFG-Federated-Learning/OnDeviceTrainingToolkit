@@ -1,0 +1,52 @@
+[2024-11-25 00:37:36,419][flwr][DEBUG] - Pre-registering run with id 4959518801338125208
+[2024-11-25 00:37:36,420][flwr][DEBUG] - Using InMemoryState
+[2024-11-25 00:37:36,420][flwr][DEBUG] - Using InMemoryState
+[2024-11-25 00:37:36,432][flwr][DEBUG] - Buffer time delay: 5s
+[2024-11-25 00:37:36,532][flwr][WARNING] - 
+Setting `min_available_clients` lower than `min_fit_clients` or
+`min_evaluate_clients` can cause the server to fail when there are too few clients
+connected to the server. `min_available_clients` must be set to a value larger
+than or equal to the values of `min_fit_clients` and `min_evaluate_clients`.
+
+[2024-11-25 00:37:36,533][flwr][INFO] - Starting Flower ServerApp, config: num_rounds=3, no round_timeout
+[2024-11-25 00:37:36,534][flwr][INFO] - 
+[2024-11-25 00:37:36,534][flwr][INFO] - [INIT]
+[2024-11-25 00:37:36,534][flwr][INFO] - Using initial global parameters provided by strategy
+[2024-11-25 00:37:36,534][flwr][INFO] - Starting evaluation of initial global parameters
+[2024-11-25 00:37:36,534][flwr][INFO] - Evaluation returned no results (`None`)
+[2024-11-25 00:37:36,534][flwr][INFO] - 
+[2024-11-25 00:37:36,534][flwr][INFO] - [ROUND 1]
+[2024-11-25 00:37:41,440][flwr][DEBUG] - Using InMemoryState
+[2024-11-25 00:37:41,441][flwr][DEBUG] - Registered 10 nodes
+[2024-11-25 00:37:41,443][flwr][DEBUG] - Supported backends: ['ray']
+[2024-11-25 00:37:41,444][flwr][DEBUG] - Initialising: RayBackend
+[2024-11-25 00:37:41,444][flwr][DEBUG] - Backend config: {'client_resources': {'num_cpus': 8}, 'init_args': {'logging_level': 30, 'log_to_driver': True}, 'actor': {'tensorflow': 0}}
+[2024-11-25 00:37:42,544][flwr][INFO] - configure_fit: strategy sampled 10 clients (out of 10)
+[2024-11-25 00:37:45,213][flwr][DEBUG] - Constructed ActorPool with: 1 actors
+[2024-11-25 00:37:45,213][flwr][DEBUG] - Using InMemoryState
+[2024-11-25 00:39:27,622][flwr][INFO] - aggregate_fit: received 10 results and 0 failures
+[2024-11-25 00:39:27,718][flwr][WARNING] - No fit_metrics_aggregation_fn provided
+[2024-11-25 00:39:27,718][flwr][ERROR] - ServerApp thread raised an exception: 'CustomStrategy' object has no attribute 'config'
+[2024-11-25 00:39:27,723][flwr][ERROR] - Traceback (most recent call last):
+  File "/Users/tobias/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flwr/simulation/run_simulation.py", line 336, in server_th_with_start_checks
+    run_server_app(
+  File "/Users/tobias/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flwr/server/run_serverapp.py", line 88, in run
+    server_app(driver=driver, context=context)
+  File "/Users/tobias/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flwr/server/server_app.py", line 120, in __call__
+    start_driver(
+  File "/Users/tobias/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flwr/server/compat/app.py", line 87, in start_driver
+    hist = run_fl(
+  File "/Users/tobias/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flwr/server/server.py", line 492, in run_fl
+    hist, elapsed_time = server.fit(
+  File "/Users/tobias/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flwr/server/server.py", line 115, in fit
+    res_fit = self.fit_round(
+  File "/Users/tobias/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flwr/server/server.py", line 251, in fit_round
+    ] = self.strategy.aggregate_fit(server_round, results, failures)
+  File "/Users/tobias/unicamp/flower-simulation/src/server_app.py", line 41, in aggregate_fit
+    result_path = self.config["simulation_result_paths"]
+AttributeError: 'CustomStrategy' object has no attribute 'config'
+
+[2024-11-25 00:39:27,723][flwr][DEBUG] - ServerApp finished running.
+[2024-11-25 00:39:27,723][flwr][DEBUG] - Triggered stop event for Simulation Engine.
+[2024-11-25 00:39:28,692][flwr][DEBUG] - Terminated 1 actors
+[2024-11-25 00:39:30,205][flwr][DEBUG] - Terminated RayBackend

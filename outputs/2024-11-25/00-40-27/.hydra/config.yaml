@@ -1,14 +1,12 @@
 model_use: https://drive.usercontent.google.com/u/2/uc?id=1BXJbfCki80avFWT0WP693zJBB1fM2utB&export=download
 device_config_path: /Users/tobias/unicamp/flower-simulation/deviceConfigurations.json
 simulation_result_paths: /Users/tobias/unicamp/flower-simulation/simulation_result.csv
-
 backend_config:
   client_resources:
     num_cpus: 8
 gpu_backend_config:
-  client_resources: 
+  client_resources:
     num_gpus: 1
-
 num_rounds: 3
 partitions: 10
 min_client_per_round: 10

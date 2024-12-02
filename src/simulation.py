@@ -11,14 +11,14 @@ from flwr.simulation import run_simulation
 DEVICE = torch.device("cpu")  # Try "cuda" to train on GPU
 log = logging.getLogger(__name__)
 
+
 @hydra.main(config_path=".", config_name="config")
 def my_app(cfg: DictConfig) -> None:
     cfg = OmegaConf.to_container(cfg)
     backend_config = cfg.get("backend_config")
 
-    with open('/home/tobias/flower-simulation/deviceConfigurations.json', 'r') as json_file:
-        devices_config = json.load(json_file)
-    cfg["devices_config"] = devices_config
+    with open(cfg.get("device_config_path"), "r") as json_file:
+        cfg["devices_config"] = json.load(json_file)
 
     if DEVICE.type == "cuda":
         backend_config = cfg.get("gpu_backend_config")
@@ -32,6 +32,7 @@ def my_app(cfg: DictConfig) -> None:
         num_supernodes=NUM_PARTITIONS,
         backend_config=backend_config,
     )
+
 
 if __name__ == "__main__":
     my_app()

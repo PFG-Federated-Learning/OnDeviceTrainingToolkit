@@ -6,16 +6,17 @@ from tqdm import tqdm
 import tensorflow as tf
 import numpy as np
 
-def train_model(model:MyModel, ds_train):
-    '''
+
+def train_model(model: MyModel, ds_train):
+    """
     Trains the given model using ds_train and saves the features and labels
     from the dataset to a binary file.
     Parameters:
         model: The model to be trained, instance of MyModel
         ds_train: iterable representing the dataset to train the model.
                   Its items should be pairs (x, y) of (features, labels)
-    '''
-    x_all= None
+    """
+    x_all = None
     y_all = None
     curr_loss = float("inf")
 
@@ -29,9 +30,9 @@ def train_model(model:MyModel, ds_train):
         else:
             x_all = np.append(x_all, x, axis=0)
             y_all = np.append(y_all, y, axis=0)
-            
+
         # Perform training step
-        curr_loss = model.train(x, y)['loss']
+        curr_loss = model.train(x, y)["loss"]
         pbar.set_description(f"Training: loss = {curr_loss}")
 
     # Save the features to a binary format
@@ -40,40 +41,40 @@ def train_model(model:MyModel, ds_train):
 
     return model
 
+
 def save_keras_model(model, model_dir):
     # Save the Keras model
-    # The "signatures" saved in this step are the functions that will 
+    # The "signatures" saved in this step are the functions that will
     # be available to be called on device
     tf.saved_model.save(
         model,
         model_dir,
         signatures={
-            'train':
-                model.train.get_concrete_function(),
-            'infer':
-                model.infer.get_concrete_function(),
-            'save':
-                model.save.get_concrete_function(),
-            'restore':
-                model.restore.get_concrete_function(),
-        })
-    
+            "train": model.train.get_concrete_function(),
+            "infer": model.infer.get_concrete_function(),
+            "save": model.save.get_concrete_function(),
+            "restore": model.restore.get_concrete_function(),
+        },
+    )
+
+
 def save_tflite_model(saved_model_dir):
     # Convert the model to TFLite
     converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir)
     converter.target_spec.supported_ops = [
         tf.lite.OpsSet.TFLITE_BUILTINS,  # enable LiteRT ops.
-        tf.lite.OpsSet.SELECT_TF_OPS  # enable TensorFlow ops.
+        tf.lite.OpsSet.SELECT_TF_OPS,  # enable TensorFlow ops.
     ]
     converter.allow_custom_ops = True
     converter.experimental_enable_resource_variables = True
     tflite_model = converter.convert()
 
     # Save the TFLite model to file
-    with open(TFLITE_MODEL_FILE, 'wb') as f:
-       f.write(tflite_model)
-    
+    with open(TFLITE_MODEL_FILE, "wb") as f:
+        f.write(tflite_model)
+
     return tflite_model
+
 
 def main():
     model = MyModel()
@@ -92,16 +93,22 @@ def main():
     infer = interpreter.get_signature_runner("infer")
 
     sample_batch = np.array([x for (x, _) in ds_train.take(1).as_numpy_iterator()][0])
-    print("\nKERAS OUTPUT:\n", model.infer(sample_batch)['logits'][0])
-    print("TFLITE OUTPUT:\n", infer(x=np.array(sample_batch).astype(np.float32))['logits'][0])
+    print("\nKERAS OUTPUT:\n", model.infer(sample_batch)["logits"][0])
+    print(
+        "TFLITE OUTPUT:\n",
+        infer(x=np.array(sample_batch).astype(np.float32))["logits"][0],
+    )
 
     if RUN_TFLITE_TRAINING:
         # Testing train function from TFLite converted model
         train = interpreter.get_signature_runner("train")
         curr_loss = float("inf")
-        for x, y in (pbar := tqdm(ds_train, desc=f"Training (TFLite): loss = {curr_loss}")):
-            curr_loss = train(x=x, y=y)['loss']
+        for x, y in (
+            pbar := tqdm(ds_train, desc=f"Training (TFLite): loss = {curr_loss}")
+        ):
+            curr_loss = train(x=x, y=y)["loss"]
             pbar.set_description(f"Training (TFLite): loss = {curr_loss}")
+
 
 if __name__ == "__main__":
     main()

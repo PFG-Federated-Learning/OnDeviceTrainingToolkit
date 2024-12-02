@@ -9,9 +9,10 @@ import flwr as fl
 from model_generation.example_cifar10.model_definition import _get_model as get_model
 from model_generation.example_cifar10.dataset_definition import get_processed_ds
 
+
 # Define a Flower client for each simulated client
 class MnistClient(fl.client.NumPyClient):
-    def __init__(self, model, train_ds, ds_samples,client_configs):
+    def __init__(self, model, train_ds, ds_samples, client_configs):
         self.model = model
         self.train_ds = train_ds
         self.ds_samples = ds_samples
@@ -27,12 +28,14 @@ class MnistClient(fl.client.NumPyClient):
         energy = self.energy_per_sample * self.ds_samples
         time = self.time_per_sample * self.ds_samples
         self.model.fit(self.train_ds, epochs=self.epochs, verbose=0)
-        return self.model.get_weights(), len(self.train_ds), {"energy": energy, "time": time}
+        metrics = {"energy": energy, "time": time, "epochs": self.epochs}
+        return self.model.get_weights(), len(self.train_ds), metrics
 
     def evaluate(self, parameters, config):
         self.model.set_weights(parameters)
         loss, accuracy = self.model.evaluate(self.train_ds, verbose=0)
         return loss, len(self.train_ds), {"accuracy": accuracy}
+
 
 def client_fn(context, config):
     train_ds, ds_samples = get_processed_ds()
@@ -43,8 +46,9 @@ def client_fn(context, config):
         metrics=["accuracy"],
     )
     clients = config["devices_config"]
-    client_configs = clients[randint(0,len(clients)-1)]
+    client_configs = clients[randint(0, len(clients) - 1)]
     return MnistClient(model, train_ds, ds_samples, client_configs).to_client()
+
 
 def create_client_app(config):
     return ClientApp(client_fn=lambda context: client_fn(context, config))
