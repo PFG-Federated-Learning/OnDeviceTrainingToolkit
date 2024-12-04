@@ -1,42 +1,37 @@
-# Flower Simulation for calculating Carbon Cost
+# On-device Training - Model & Dataset Generation and Federated simulation
 
-#TODO
+This repository aims to provide all of the supporting features for **On-Device Training** android application, that can be seen in this [github repository](https://github.com/PFG-Federated-Learning/OnDeviceTraning).
 
-# How to run
+The repository cointains the features for creating datasets and model binary files to be used for training, as well as a simulation environment for the device metrics collected by the app. Have a look at more descriptive information for each of the 2 sections below:
 
-install dependencies:
+- [Model and Dataset Generation](/model_generation/README)
+- [Federated Simulation](/simulation/README)
 
-```shell
-pip install -r requirements.txt
+## Repository Structure
+
 ```
-
-define the configurations for the run in the file `src/config.yaml`. Below an example can be seen of a configuration:
-
-```yaml
-
-model: prajjwal1/bert-tiny
-dataset: stanfordnlp/imdb
-backend_config:
-  client_resources:
-    num_cpus: 8
-gpu_backend_config:
-  client_resources: 
-    num_gpus: 1
-
-clients:
-  - cpu_time: 30
-  - cpu_time: 20
-  - cpu_time: 10
-
-partitions: 10
-```
-
-In the example above, the model and dataset are set. It is also defined the number of cpus to paralellize the simulation or, if available, the number ofgpus.
-In the end, the clients to be simulated are defined with their own metrics. More metrics can be added if needed. 
-It is also define the number of partitions to ddivide the dataset.
-
-**Finally, run the simulation:**
-
-```shell
-python src/simulation.py
+.
+├── deviceConfigurations.json
+├── .gitignore
+├── README
+├── model_generation
+│   ├── constants.py
+│   ├── dataset_definition.py
+│   ├── example_cifar10
+│   │   ├── constants.py
+│   │   ├── dataset_definition.py
+│   │   ├── main.py
+│   │   └── model_definition.py
+│   ├── main.py
+│   ├── model_definition.py
+│   └── README
+├── requirements.txt
+└── simulation
+    ├── client_app.py
+    ├── config.yaml
+    ├── firebase_retriever.py
+    ├── README
+    ├── server_app.py
+    ├── simulation.py
+    └── task.py
 ```
