@@ -15,15 +15,16 @@ The repository cointains the features for creating datasets and model binary fil
 ├── .gitignore
 ├── README
 ├── model_generation
-│   ├── constants.py
-│   ├── dataset_definition.py
 │   ├── example_cifar10
 │   │   ├── constants.py
 │   │   ├── dataset_definition.py
 │   │   ├── main.py
 │   │   └── model_definition.py
-│   ├── main.py
-│   ├── model_definition.py
+|   ├── example_mnist
+│   │   ├── constants.py
+│   │   ├── dataset_definition.py
+│   │   ├── main.py
+│   │   └── model_definition.py
 │   └── README
 ├── requirements.txt
 └── simulation
