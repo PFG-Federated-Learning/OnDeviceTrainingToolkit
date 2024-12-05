@@ -114,9 +114,3 @@ gpu_backend_config:
 ## Contributing
 
 Feel free to contribute to this project by submitting pull requests, reporting issues, or suggesting enhancements.
-
----
-
-## License
-
-This repository is licensed under the MIT License. See the `LICENSE` file for details.
