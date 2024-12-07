@@ -1,41 +1,28 @@
 [
     {
-        "batchSize":32,
-        "batches":32,
-        "energySpent":277.62075,
-        "epochs":3,
-        "featuresLink":"https:\/\/drive.usercontent.google.com\/u\/2\/uc?id=1QrE3uTw3-Qu-O36wEDJDZ8b57i-fOxeU&export=download",
-        "labelsLink":"https:\/\/drive.usercontent.google.com\/u\/2\/uc?id=15Q4gQYlIigmBvM9MKnrk5G1AR5EY2zlE&export=download",
-        "modelLink":"https:\/\/drive.usercontent.google.com\/u\/2\/uc?id=1BXJbfCki80avFWT0WP693zJBB1fM2utB&export=download",
-        "modelSize":28966900,
-        "sampleEnergy":0.2711140137,
-        "sampleTime":38.015625,
-        "timeSpent":38928
+        "batchSize":64,
+        "batches":100,
+        "energySpent":166.5279,
+        "epochs":10,
+        "featuresLink":"https:\/\/github.com\/MatheusDCasanova\/OnDeviceTraning\/raw\/refs\/heads\/master\/mnist_feats.bin",
+        "labelsLink":"https:\/\/github.com\/MatheusDCasanova\/OnDeviceTraning\/raw\/refs\/heads\/master\/mnist_labels.bin",
+        "modelLink":"https:\/\/github.com\/MatheusDCasanova\/OnDeviceTraning\/raw\/refs\/heads\/master\/model_mnist_fixed_batch_size.tflite",
+        "modelSize":11128732,
+        "sampleEnergy":0.0260199844,
+        "sampleTime":7.89859375,
+        "timeSpent":50551
     },
     {
-        "batchSize":32,
-        "batches":32,
-        "energySpent":63.9414,
-        "epochs":3,
-        "featuresLink":"https:\/\/drive.usercontent.google.com\/u\/2\/uc?id=1QrE3uTw3-Qu-O36wEDJDZ8b57i-fOxeU&export=download",
-        "labelsLink":"https:\/\/drive.usercontent.google.com\/u\/2\/uc?id=15Q4gQYlIigmBvM9MKnrk5G1AR5EY2zlE&export=download",
-        "modelLink":"https:\/\/drive.usercontent.google.com\/u\/2\/uc?id=1BXJbfCki80avFWT0WP693zJBB1fM2utB&export=download",
-        "modelSize":28966900,
-        "sampleEnergy":0.0624427734,
-        "sampleTime":19.580078125,
-        "timeSpent":20050
-    },
-    {
-        "batchSize":32,
-        "batches":32,
-        "energySpent":64.9458,
-        "epochs":3,
-        "featuresLink":"https:\/\/drive.usercontent.google.com\/u\/2\/uc?id=1QrE3uTw3-Qu-O36wEDJDZ8b57i-fOxeU&export=download",
-        "labelsLink":"https:\/\/drive.usercontent.google.com\/u\/2\/uc?id=15Q4gQYlIigmBvM9MKnrk5G1AR5EY2zlE&export=download",
-        "modelLink":"https:\/\/drive.usercontent.google.com\/u\/2\/uc?id=1BXJbfCki80avFWT0WP693zJBB1fM2utB&export=download",
-        "modelSize":28966900,
-        "sampleEnergy":0.0634236328,
-        "sampleTime":19.6650390625,
-        "timeSpent":20137
+        "batchSize":64,
+        "batches":100,
+        "energySpent":55.19745,
+        "epochs":1,
+        "featuresLink":"https:\/\/github.com\/MatheusDCasanova\/OnDeviceTraning\/raw\/refs\/heads\/master\/mnist_feats.bin",
+        "labelsLink":"https:\/\/github.com\/MatheusDCasanova\/OnDeviceTraning\/raw\/refs\/heads\/master\/mnist_labels.bin",
+        "modelLink":"https:\/\/github.com\/MatheusDCasanova\/OnDeviceTraning\/raw\/refs\/heads\/master\/model_mnist_fixed_batch_size.tflite",
+        "modelSize":11128732,
+        "sampleEnergy":0.0086246016,
+        "sampleTime":0.629375,
+        "timeSpent":4028
     }
 ]

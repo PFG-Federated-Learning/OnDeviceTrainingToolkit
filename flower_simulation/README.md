@@ -47,7 +47,7 @@ Filters and exports data from Firebase based on the specified `model_use` URL in
 
 **Run the script:**
 ```bash
-python simulation/firebase_retriver.py
+python flower_simulation/firebase_retriver.py
 ```
 
 **Output:**  
@@ -60,7 +60,7 @@ Simulates federated learning with customizable parameters.
 
 **Run the script:**
 ```bash
-python simulation/simulation.py
+python flower_simulation/flower_simulation.py
 ```
 
 **Configuration:**  

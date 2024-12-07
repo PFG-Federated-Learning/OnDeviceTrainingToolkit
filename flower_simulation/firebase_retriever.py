@@ -6,7 +6,7 @@ import json
 import pandas as pd
 
 # Load the model_link from the config.yaml file
-with open('src/config.yaml', 'r') as yaml_file:
+with open('flower_simulation/config.yaml', 'r') as yaml_file:
     config = safe_load(yaml_file)
 model_link_to_filter = config.get('model_use', None)
 firebase_database_url = config.get('firebase_database_url', None)

@@ -19,13 +19,12 @@ def my_app(cfg: DictConfig) -> None:
 
     with open(cfg.get("device_config_path"), "r") as json_file:
         cfg["devices_config"] = json.load(json_file)
-
     if DEVICE.type == "cuda":
         backend_config = cfg.get("gpu_backend_config")
 
     NUM_PARTITIONS = cfg.get("partitions")
 
-    # Run simulation
+    # Run flower_simulation
     run_simulation(
         server_app=create_server_app(cfg),
         client_app=create_client_app(cfg),

@@ -1,5 +1,5 @@
 import tensorflow as tf
-from constants import *
+from model_generation.example_mnist.constants import *
 
 
 def _get_model():

@@ -8,7 +8,7 @@ from typing import Dict
 import os
 import pandas as pd
 
-from model_generation.example_cifar10.model_definition import _get_model as get_model
+from model_generation.example_mnist.model_definition import _get_model as get_model
 
 # Define the custom strategy with cumulative metrics tracking
 class CustomStrategy(FedAvg):
@@ -39,7 +39,7 @@ class CustomStrategy(FedAvg):
         :param failures: Failed client results (not used here but included for compatibility).
         """
         aggregated_weights, _ = super().aggregate_fit(rnd, results, failures)
-        result_path = self.config["simulation_result_paths"]
+        result_path = self.config["simulation_result_path"]
         result_df = get_result_df(result_path)
 
         for _, client_result in results:

@@ -5,7 +5,7 @@ This repository aims to provide all of the supporting features for **On-Device T
 The repository cointains the features for creating datasets and model binary files to be used for training, as well as a simulation environment for the device metrics collected by the app. Have a look at more descriptive information for each of the 2 sections below:
 
 - [Model and Dataset Generation](/model_generation/README)
-- [Federated Simulation](/simulation/README)
+- [Federated Simulation](/flower_simulation/README)
 
 ## Repository Structure
 

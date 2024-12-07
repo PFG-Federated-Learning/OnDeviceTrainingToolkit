@@ -1,7 +1,7 @@
 import tensorflow as tf
 import tensorflow_datasets as tfds
 
-from constants import *
+from model_generation.example_mnist.constants import *
 
 # This file should contain the pipeline to obtain your dataset
 
@@ -30,8 +30,8 @@ def get_processed_ds():
     ds_train, ds_test, ds_info = get_ds()
 
     ds_train = ds_train.map(normalize_img, num_parallel_calls=tf.data.AUTOTUNE)
-
-    ds_train = ds_train.shuffle(ds_info.splits["train"].num_examples)
+    num_samples = ds_info.splits["train"].num_examples
+    ds_train = ds_train.shuffle(num_samples)
     ds_train = ds_train.batch(BATCH_SIZE, drop_remainder=True)
 
-    return ds_train
+    return ds_train, num_samples

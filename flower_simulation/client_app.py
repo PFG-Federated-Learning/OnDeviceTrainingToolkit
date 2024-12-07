@@ -6,8 +6,11 @@ from flwr.client import ClientApp
 import tensorflow as tf
 import flwr as fl
 
-from model_generation.example_cifar10.model_definition import _get_model as get_model
-from model_generation.example_cifar10.dataset_definition import get_processed_ds
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from model_generation.example_mnist.model_definition import _get_model as get_model
+from model_generation.example_mnist.dataset_definition import get_processed_ds
 
 
 # Define a Flower client for each simulated client
