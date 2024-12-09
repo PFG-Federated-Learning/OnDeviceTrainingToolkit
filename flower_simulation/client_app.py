@@ -11,11 +11,13 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from model_generation.example_mnist.model_definition import _get_model as get_model
 from model_generation.example_mnist.dataset_definition import get_processed_ds
+from uuid import uuid4
 
 
 # Define a Flower client for each simulated client
 class MnistClient(fl.client.NumPyClient):
-    def __init__(self, model, train_ds, ds_samples, client_configs):
+    def __init__(self, client_id, model, train_ds, ds_samples, client_configs):
+        self.client_id = client_id
         self.model = model
         self.train_ds = train_ds
         self.ds_samples = ds_samples
@@ -31,7 +33,7 @@ class MnistClient(fl.client.NumPyClient):
         energy = self.energy_per_sample * self.ds_samples
         time = self.time_per_sample * self.ds_samples
         self.model.fit(self.train_ds, epochs=self.epochs, verbose=0)
-        metrics = {"energy": energy, "time": time, "epochs": self.epochs}
+        metrics = {"client_id": self.client_id, "energy": energy, "time": time, "epochs": self.epochs}
         return self.model.get_weights(), len(self.train_ds), metrics
 
     def evaluate(self, parameters, config):
@@ -50,7 +52,8 @@ def client_fn(context, config):
     )
     clients = config["devices_config"]
     client_configs = clients[randint(0, len(clients) - 1)]
-    return MnistClient(model, train_ds, ds_samples, client_configs).to_client()
+
+    return MnistClient(str(uuid4()),model, train_ds, ds_samples, client_configs).to_client()
 
 
 def create_client_app(config):

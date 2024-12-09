@@ -46,6 +46,7 @@ class CustomStrategy(FedAvg):
             metrics = client_result.metrics
             new_row = {
                 "round": rnd,
+                "client_id": metrics.get("client_id",0),
                 "energy": metrics.get("energy", 0),
                 "time": metrics.get("time", 0),
                 "epochs": metrics.get("epochs", 0),

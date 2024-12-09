@@ -1,11 +1,14 @@
 firebase_database_url: https://ondevicetraining-dc6d0-default-rtdb.firebaseio.com/
-model_use: https://github.com/MatheusDCasanova/OnDeviceTraning/raw/refs/heads/master/model_mnist_fixed_batch_size.tflite
-device_config_path: /home/tobias/flower-simulation/deviceConfigurations.json
-simulation_result_path: /home/tobias/flower-simulation/simulation-result.csv
+model_use: https://github.com/PFG-Federated-Learning/OnDeviceTrainingToolkit/raw/refs/heads/main/model_generation/outputs/model_mnist_fixed_batch_size.tflite
+device_config_path: /Users/tobias/unicamp/flower-simulation/deviceConfigurations.json
+simulation_result_path: /Users/tobias/unicamp/flower-simulation/simulation-result.csv
 
-partitions: 300
-min_client_per_round: 2
-num_rounds: 3
+partitions: 100
+min_client_per_round: 20
+fraction_fit: 0.2
+
+num_rounds: 5
+
 
 backend_config:
   client_resources:

@@ -2,7 +2,6 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from yaml import safe_load
-import json
 import pandas as pd
 
 # Load the model_link from the config.yaml file
