@@ -1,4 +1,4 @@
-# On-device Training - Model & Dataset Generation and Federated simulation
+# OnDeviceTrainingToolkit - Model & Dataset Generation and Federated simulation
 
 This repository aims to provide all of the supporting features for **On-Device Training** android application, that can be seen in this [github repository](https://github.com/PFG-Federated-Learning/OnDeviceTraning).
 
